@@ -1,0 +1,34 @@
+!include_try local.conf
+mail_location =mbox:~/mail:INBOX=/var/mail/%u
+protocols = " imap"
+disable_plaintext_auth = no
+mail_privileged_group = mail
+userdb {
+ driver = passwd
+}
+
+passdb {
+ driver = pam
+}
+
+service auth {
+ unix_listener /var/spool/postfix/private/auth {
+ mode = 0666
+ user = postfix
+ group = postfix
+ }
+}
+protocols = " imap"
+protocol imap {
+mail_plugins = " autocreate"
+}
+plugin {
+autocreate = Trash
+autocreate2 = Sent
+autosubscribe = Trash
+autosubscribe2 = Sent
+}
+ssl = required
+ssl_cert = </etc/ssl/certs/mailcert.pem
+ssl_key = </etc/ssl/private/mail.key
+
